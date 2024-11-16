@@ -1,213 +1,142 @@
 package com.example.hellojavafx.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import com.example.hellojavafx.models.GameBoard;
-import com.example.hellojavafx.view.alert.AlertBox; // Importa tu AlertBox
-import javafx.event.EventHandler;
+import com.example.hellojavafx.models.Ship;
+import com.example.hellojavafx.view.alert.AlertBox;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
+import java.util.Random;
 
 /**
- * Controlador para el juego de Sudoku.
- * Maneja la interacción del usuario y la lógica del juego.
+ * Controlador principal del juego de Batalla Naval.
+ * Maneja la lógica del juego, incluyendo la inicialización de los tableros,
+ * el manejo de turnos, y la detección de condiciones de victoria o derrota.
  */
-public class GameController implements Initializable {
+public class GameController {
 
-    @FXML Button button_one;  // Botón para seleccionar el número 1
-    @FXML Button button_two;  // Botón para seleccionar el número 2
-    @FXML Button button_three; // Botón para seleccionar el número 3
-    @FXML Button button_four; // Botón para seleccionar el número 4
-    @FXML Button button_five; // Botón para seleccionar el número 5
-    @FXML Button button_six;  // Botón para seleccionar el número 6
-    @FXML Canvas canvas;      // Canvas donde se dibuja el tablero
-    @FXML TextArea textAreaa; // Área de texto para mostrar números y mensajes
+    /** Indica si el juego está en progreso. */
+    private boolean running = false;
 
-    int player_selected_row;   // Fila seleccionada por el jugador
-    int player_selected_col;   // Columna seleccionada por el jugador
+    /** Tablero del enemigo. */
+    private Board enemyBoard;
 
-    // Instancia de GameBoard
-    GameBoard gameboard;
+    /** Tablero del jugador. */
+    private Board playerBoard;
 
-    // Instancia de AlertBox
-    AlertBox alertBox;
+    /** Número de barcos restantes por colocar para el jugador. */
+    private int shipsToPlace = 4;
+
+    /** Indica si es el turno del enemigo. */
+    private boolean enemyTurn = false;
+
+    /** Generador de números aleatorios para los movimientos del enemigo. */
+    private Random random = new Random();
+
+    /** Contenedor del tablero del jugador. */
+    @FXML
+    private AnchorPane pane1;
+
+    /** Contenedor del tablero del enemigo. */
+    @FXML
+    private AnchorPane pane2;
+
+    /** Imagen representativa del barco 1. */
+    @FXML
+    private ImageView b1;
+
+    /** Imagen representativa del barco 2. */
+    @FXML
+    private ImageView b2;
+
+    /** Imagen representativa del barco 3. */
+    @FXML
+    private ImageView b3;
+
+    /** Imagen representativa del barco 4. */
+    @FXML
+    private ImageView b4;
 
     /**
-     * Método que se ejecuta al inicializar el controlador.
-     * Crea una instancia de GameBoard y configura el canvas.
-     *
-     * @param arg0 URL de la ubicación del FXML.
-     * @param arg1 Recursos de la interfaz de usuario.
+     * Método de inicialización que configura los tableros del jugador y del enemigo.
+     * También define los manejadores de eventos para cada tablero.
      */
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-        gameboard = new GameBoard(); // Crear una instancia de nuestro tablero de juego
-        alertBox = new AlertBox();    // Crear una instancia de AlertBox
-        GraphicsContext context = canvas.getGraphicsContext2D();
-        drawOnCanvas(context);
+    public void initialize() {
+        // Inicialización del tablero del enemigo
+        enemyBoard = new Board(true, event -> {
+            if (!running) return;
 
-        // Listener para el TextArea
-        textAreaa.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches("[1-6]?")) {
-                if (!newValue.isEmpty() && player_selected_row >= 0 && player_selected_col >= 0) {
-                    int val = Integer.parseInt(newValue);
-                    if (gameboard.isValidMove(val, player_selected_row, player_selected_col)) {
-                        gameboard.modifyPlayer(val, player_selected_row, player_selected_col);
-                        drawOnCanvas(canvas.getGraphicsContext2D());
-                    } else {
-                        showInvalidMoveAlert(); // Usar AlertBox aquí
-                    }
-                }
-            } else {
-                textAreaa.setText(oldValue);
+            Board.Cell cell = (Board.Cell) event.getSource();
+            if (cell.wasShot) return;
+
+            enemyTurn = !cell.shoot();
+
+            if (enemyBoard.ships == 0) {
+                System.out.println("YOU WIN");
+
+                AlertBox alertBox = new AlertBox();
+                alertBox.showAlert("Victoria", "Felicidades!", "Destruiste todos los barcos enemigos");
+            }
+
+            if (enemyTurn) {
+                enemyMove();
             }
         });
-    }
 
-    /**
-     * Método que se ejecuta cuando se presiona el botón 1.
-     */
-    public void buttonOnePressed() { handleButtonPressed(1); }
+        // Inicialización del tablero del jugador
+        playerBoard = new Board(false, event -> {
+            if (running) return;
 
-    /**
-     * Método que se ejecuta cuando se presiona el botón 2.
-     */
-    public void buttonTwoPressed() { handleButtonPressed(2); }
-
-    /**
-     * Método que se ejecuta cuando se presiona el botón 3.
-     */
-    public void buttonThreePressed() { handleButtonPressed(3); }
-
-    /**
-     * Método que se ejecuta cuando se presiona el botón 4.
-     */
-    public void buttonFourPressed() { handleButtonPressed(4); }
-
-    /**
-     * Método que se ejecuta cuando se presiona el botón 5.
-     */
-    public void buttonFivePressed() { handleButtonPressed(5); }
-
-    /**
-     * Método que se ejecuta cuando se presiona el botón 6.
-     */
-    public void buttonSixPressed() { handleButtonPressed(6); }
-
-    /**
-     * Maneja la lógica común para presionar cualquier botón del número.
-     *
-     * @param value El valor correspondiente al botón presionado.
-     */
-    private void handleButtonPressed(int value) {
-        if (gameboard.isValidMove(value, player_selected_row, player_selected_col)) {
-            gameboard.modifyPlayer(value, player_selected_row, player_selected_col);
-            drawOnCanvas(canvas.getGraphicsContext2D());
-        } else {
-            showInvalidMoveAlert(); // Usar AlertBox aquí
-        }
-    }
-
-    /**
-     * Muestra una alerta cuando se realiza un movimiento no válido.
-     */
-    private void showInvalidMoveAlert() {
-        alertBox.showAlert("Movimiento no válido", null, "Este movimiento no es válido. Intenta de nuevo."); // Usar AlertBox aquí
-    }
-
-    /**
-     * Dibuja el tablero y los números en el canvas.
-     *
-     * @param context El contexto gráfico del canvas.
-     */
-    public void drawOnCanvas(GraphicsContext context) {
-        context.clearRect(0, 0, 320, 320);
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 6; col++) {
-                int position_y = row * 50 + 2;
-                int position_x = col * 50 + 2;
-                int width = 46;
-                context.setFill(Color.WHITE);
-                context.fillRoundRect(position_x, position_y, width, width, 10, 10);
-            }
-        }
-
-        context.setStroke(Color.RED);
-        context.setLineWidth(5);
-        context.strokeRoundRect(player_selected_col * 50 + 2, player_selected_row * 50 + 2, 46, 46, 10, 10);
-
-        int[][] initial = gameboard.getInitial();
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 6; col++) {
-                int position_y = row * 50 + 30;
-                int position_x = col * 50 + 20;
-                context.setFill(Color.BLACK);
-                context.setFont(new Font(20));
-                if (initial[row][col] != 0) {
-                    context.fillText(initial[row][col] + "", position_x, position_y);
+            Board.Cell cell = (Board.Cell) event.getSource();
+            if (playerBoard.placeShip(new Ship(shipsToPlace, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
+                if (--shipsToPlace == 0) {
+                    startGame();
                 }
-            }
-        }
-
-        int[][] player = gameboard.getPlayer();
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 6; col++) {
-                int position_y = row * 50 + 30;
-                int position_x = col * 50 + 20;
-                context.setFill(Color.PURPLE);
-                context.setFont(new Font(20));
-                if (player[row][col] != 0) {
-                    context.fillText(player[row][col] + "", position_x, position_y);
-                }
-            }
-        }
-
-        if (gameboard.checkForSuccessGeneral()) {
-            context.clearRect(0, 0, 450, 450);
-            context.setFill(Color.GREEN);
-            context.setFont(new Font(36));
-            context.fillText("SUCCESS!", 150, 250);
-        }
-    }
-
-    /**
-     * Configura el evento de clic del mouse en el canvas para seleccionar una celda.
-     */
-    public void canvasMouseClicked() {
-        canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                int mouse_x = (int) event.getX();
-                int mouse_y = (int) event.getY();
-                player_selected_row = (int) (mouse_y / 50);
-                player_selected_col = (int) (mouse_x / 50);
-                drawOnCanvas(canvas.getGraphicsContext2D());
             }
         });
+
+        // Añadir los tableros a los contenedores correspondientes
+        pane1.getChildren().add(playerBoard);  // Tablero del jugador
+        pane2.getChildren().add(enemyBoard);  // Tablero del enemigo
     }
 
     /**
-     * Maneja el clic del botón "Ayuda" para mostrar un número válido en la celda seleccionada.
-     *
-     * @param mouseEvent El evento del clic del mouse.
+     * Maneja el turno del enemigo, permitiéndole realizar disparos aleatorios en el tablero del jugador.
+     * Si todos los barcos del jugador son destruidos, muestra una alerta indicando la derrota.
      */
-    public void getHelpButtonClicked(MouseEvent mouseEvent) {
-        if (player_selected_row >= 0 && player_selected_col >= 0) {
-            int helpNumber = gameboard.getValidNumberAtPosition(player_selected_row, player_selected_col);
-            if (helpNumber != -1) {
-                textAreaa.setText(String.valueOf(helpNumber));
-            } else {
-                alertBox.showAlert("Sin ayuda", null, "No hay números válidos disponibles para esta celda."); // Usar AlertBox aquí
+    private void enemyMove() {
+        while (enemyTurn) {
+            int x = random.nextInt(10);
+            int y = random.nextInt(10);
+
+            Board.Cell cell = playerBoard.getCell(x, y);
+            if (cell.wasShot)
+                continue;
+
+            enemyTurn = cell.shoot();
+
+            if (playerBoard.ships == 0) {
+                System.out.println("YOU LOSE");
+                AlertBox alertBox = new AlertBox();
+                alertBox.showAlert("Derrota", "Lo siento!", "Todos tus barcos fueron eliminados");
             }
-        } else {
-            alertBox.showAlert("Sin celda seleccionada", null, "No hay celda seleccionada."); // Usar AlertBox aquí
         }
+    }
+
+    /**
+     * Inicia el juego una vez que todos los barcos del jugador han sido colocados.
+     * También posiciona los barcos del enemigo aleatoriamente en su tablero.
+     */
+    private void startGame() {
+        int type = 4;
+        while (type > 0) {
+            int x = random.nextInt(10);
+            int y = random.nextInt(10);
+
+            if (enemyBoard.placeShip(new Ship(type, Math.random() < 0.5), x, y)) {
+                type--;
+            }
+        }
+        running = true;
     }
 }

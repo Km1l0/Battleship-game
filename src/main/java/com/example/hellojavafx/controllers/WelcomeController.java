@@ -18,4 +18,8 @@ public class WelcomeController {
             // Manejo de excepciones si no se puede cargar el FXML de la vista del juego
         }
     }
+
+
+    public void contButtn(ActionEvent actionEvent) {
+    }
 }

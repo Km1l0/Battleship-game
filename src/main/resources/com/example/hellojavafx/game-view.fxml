@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="720.0" style="-fx-background-color: #7f40d6;" styleClass="base_pane" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hellojavafx.controllers.GameController">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="621.0" prefWidth="848.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hellojavafx.controllers.GameController">
    <children>
-      <Button fx:id="button_one" layoutX="501.0" layoutY="155.0" mnemonicParsing="false" onMouseClicked="#buttonOnePressed" prefHeight="50.0" prefWidth="50.0" text="1" />
-      <Button fx:id="button_two" layoutX="561.0" layoutY="155.0" mnemonicParsing="false" onMouseClicked="#buttonTwoPressed" prefHeight="50.0" prefWidth="50.0" text="2" />
-      <Button fx:id="button_three" layoutX="620.0" layoutY="155.0" mnemonicParsing="false" onMouseClicked="#buttonThreePressed" prefHeight="50.0" prefWidth="50.0" text="3" />
-      <Button fx:id="button_four" layoutX="501.0" layoutY="215.0" mnemonicParsing="false" onMouseClicked="#buttonFourPressed" prefHeight="50.0" prefWidth="50.0" text="4" />
-      <Button fx:id="button_five" layoutX="561.0" layoutY="215.0" mnemonicParsing="false" onMouseClicked="#buttonFivePressed" prefHeight="50.0" prefWidth="50.0" text="5" />
-      <Button fx:id="button_six" layoutX="620.0" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#buttonSixPressed" prefHeight="50.0" prefWidth="50.0" text="6" />
-      <Canvas fx:id="canvas" height="320.0" layoutX="25.0" layoutY="69.0" onMouseClicked="#canvasMouseClicked" width="320.0" />
-      <Button fx:id="getHelpButton" layoutX="542.0" layoutY="44.0" mnemonicParsing="false" onMouseClicked="#getHelpButtonClicked" prefHeight="25.0" prefWidth="89.0" text="Help" />
-      <TextArea fx:id="textAreaa" layoutX="566.0" layoutY="327.0" prefHeight="37.0" prefWidth="22.0" />
+      <!-- Segundo tablero con 10x10 (300x300px) -->
+      <AnchorPane fx:id="pane2" layoutX="454.0" layoutY="93.0" prefHeight="403.0" prefWidth="378.0" />
+      <!-- Primer tablero con 10x10 (300x300px) -->
+      <AnchorPane fx:id="pane1" layoutX="13.0" layoutY="93.0" prefHeight="403.0" prefWidth="378.0" />
+
+      <!-- HBox con los ImageViews para mostrar imágenes -->
+      <HBox layoutX="205.0" layoutY="496.0" prefHeight="93.0" prefWidth="402.0">
+         <children>
+            <ImageView fitHeight="32.0" fitWidth="55.0">
+               <image>
+                  <Image url="@images/barco1.png" />
+               </image>
+            </ImageView>
+            <ImageView>
+               <image>
+                  <Image url="@images/barco2.png" />
+               </image>
+            </ImageView>
+            <ImageView>
+               <image>
+                  <Image url="@images/barco3.png" />
+               </image>
+            </ImageView>
+            <ImageView>
+               <image>
+                  <Image url="@images/barco4.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
    </children>
-</Pane>
+</AnchorPane>

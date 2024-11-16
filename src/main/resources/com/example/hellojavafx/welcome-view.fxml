@@ -7,17 +7,22 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #34b4eb;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hellojavafx.controllers.WelcomeController">
    <children>
-      <Text fill="#3f4e8f" layoutX="75.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SUDOKU">
+      <Text fill="#3f4e8f" layoutX="243.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME">
          <font>
             <Font size="42.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="241.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME">
+      <Text fill="WHITE" layoutX="172.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BATTLE SHIPS">
          <font>
             <Font size="42.0" />
          </font>
       </Text>
       <Button layoutX="243.0" layoutY="181.0" mnemonicParsing="false" onAction="#startButtn" text="Iniciar juego">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+      <Button layoutX="195.0" layoutY="242.0" mnemonicParsing="false" onAction="#contButtn" text="Continuar sesión anterior">
          <font>
             <Font size="17.0" />
          </font>

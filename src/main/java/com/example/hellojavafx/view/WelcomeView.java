@@ -15,7 +15,7 @@ public class WelcomeView extends Stage {
                 getClass().getResource("/com/example/hellojavafx/welcome-view.fxml")
         );
         Parent root = loader.load();
-        this.setTitle("Craps Game");
+        this.setTitle("Battleship Game");
         Scene scene = new Scene(root);
         this.getIcons().add(new Image(
                 getClass().getResourceAsStream("/com/example/hellojavafx/images/favicon.png")
