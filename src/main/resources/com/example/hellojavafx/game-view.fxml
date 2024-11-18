@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="621.0" prefWidth="848.0" style="-fx-background-color: #AED3E3;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hellojavafx.controllers.GameController">
+   <children>
+      <!-- Segundo tablero con 10x10 (300x300px) -->
+      <AnchorPane fx:id="pane2" layoutX="454.0" layoutY="93.0" prefHeight="360.0" prefWidth="378.0" style="-fx-border-color: #444; -fx-border-width: 2; -fx-background-color: #003F5D; -fx-effect: dropshadow(gaussian, #888, 10, 0.5, 2, 2);">
+         <!-- Tablero del enemigo -->
+      </AnchorPane>
+
+      <!-- Primer tablero con 10x10 (300x300px) -->
+      <AnchorPane fx:id="pane1" layoutX="13.0" layoutY="93.0" prefHeight="360.0" prefWidth="378.0" style="-fx-border-color: #444; -fx-border-width: 2; -fx-background-color: #003F5D; -fx-effect: dropshadow(gaussian, #888, 10, 0.5, 2, 2);">
+         <!-- Tablero del jugador -->
+      </AnchorPane>
+
+      <!-- HBox con los ImageViews para mostrar imágenes de barcos -->
+      <HBox alignment="CENTER" layoutX="180.0" layoutY="545.0" prefHeight="78.0" prefWidth="500.0" spacing="15.0" style="-fx-background-color: #cdcdcd; -fx-padding: 10px; -fx-border-radius: 5; -fx-effect: dropshadow(gaussian, #888, 10, 0.5, 2, 2);">
+         <ImageView fitHeight="32.0" fitWidth="55.0">
+            <image>
+               <Image url="@images/barco1.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="32.0" fitWidth="55.0">
+            <image>
+               <Image url="@images/barco2.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="32.0" fitWidth="55.0">
+            <image>
+               <Image url="@images/barco3.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="32.0" fitWidth="55.0">
+            <image>
+               <Image url="@images/barco4.png" />
+            </image>
+         </ImageView>
+      </HBox>
+
+      <!-- Etiquetas informativas de los tableros -->
+      <HBox alignment="CENTER" layoutX="13.0" layoutY="525.0" spacing="40.0" />
+      <Label alignment="BASELINE_CENTER" layoutX="571.0" layoutY="469.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;" text="Tablero Enemigo" />
+      <Label alignment="BASELINE_CENTER" layoutX="157.0" layoutY="469.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #007acc;" text="Tu Tablero" />
+   </children>
+</AnchorPane>
